@@ -46,6 +46,7 @@ public with sharing class QuickbookUtils {
             }
            }
            catch (CalloutException ex) {
+            
                 System.debug(ex);
                 ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR, ex.getMessage() ));
             }catch (Exception ex) {
@@ -69,6 +70,38 @@ public with sharing class QuickbookUtils {
     fieldWithValuesMap.put('refresh_token__c', refresh_token);
     if(!String.isBlank(realmId)){
         fieldWithValuesMap.put('realmId__c', realmId);
+    }
+    return fieldWithValuesMap;
+}
+
+public static Boolean isValid(qb_Metadata__mdt config){
+    Boolean isValid = true;
+    if(config.expires_in_time__c <= System.now()){
+        isValid = false;
+    }
+    return isValid;
+}
+public static Map<String, Object> refreshToken(qb_Metadata__mdt config){
+        
+    String tokenUrl = config.token_url__c;
+    
+    String requestBody = 'grant_type=refresh_token&client_id='+config.client_id__c
+                        +'&client_secret='+config.client_secret__c+'&refresh_token='+config.refresh_token__c;
+    
+    System.debug(requestBody);
+    HttpRequest httpReq = PS_CalloutUtils.prepareRequest(tokenUrl,'POST',requestBody,'application/json', 'application/x-www-form-urlencoded');
+    Map<String, Object> fieldWithValuesMap = new Map<String, Object>();
+    try{
+        HttpResponse httpRes = (new Http()).send(httpReq);
+        if(httpRes.getStatusCode() == 200 || httpRes.getStatusCode() == 201 ){
+            fieldWithValuesMap = prepareMetadata(httpRes.getBody(),'');
+        }else{
+            
+        }
+    }catch(System.CalloutException ex){
+        
+    }catch(System.Exception ex){
+        
     }
     return fieldWithValuesMap;
 }
