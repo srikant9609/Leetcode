@@ -1,0 +1,28 @@
+Problem link- https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings/?envType=daily-question&envId=2024-10-21
+
+class Solution {
+    public int maxUniqueSplit(String s) {
+        Set<String> set=new HashSet<String>();
+         
+         return help(0,set,s,"");
+
+    }
+
+    public int help(int i,Set<String> set,String s,String temp){
+        if(i==s.length()) return 0;
+         else{
+            temp+=s.charAt(i);
+            int op1=Integer.MIN_VALUE/2,op2=Integer.MIN_VALUE/2;
+            if(!set.contains(temp)){
+                set.add(temp);
+                op1=1+help(i+1,set,s,"");
+                set.remove(temp);
+            }
+            op2 = help(i+1,set,s,temp);
+            return Math.max(op1,op2);
+         }
+
+        
+        
+    }
+}
