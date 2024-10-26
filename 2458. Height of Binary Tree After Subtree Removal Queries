@@ -1,0 +1,62 @@
+problem link -https://leetcode.com/problems/height-of-binary-tree-after-subtree-removal-queries/?envType=daily-question&envId=2024-10-26
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+     static class Pair {
+        int first, second;
+        Pair(int f, int s) { first = f; second = s; }
+    }
+    int findHeight(TreeNode curr, int level, int[] node_level, int[] node_height, Pair[] top2_height) {
+        if (curr == null) return 0;
+          int height = 1 + Math.max(findHeight(curr.left, level + 1, node_level, node_height, top2_height),
+                                  findHeight(curr.right, level + 1, node_level, node_height, top2_height));
+
+              node_level[curr.val] = level;
+              node_height[curr.val] = height;
+
+              if (height > top2_height[level].first) {
+            top2_height[level].second = top2_height[level].first;
+            top2_height[level].first = height;
+        } else if (height > top2_height[level].second) {
+            top2_height[level].second = height;
+        }
+        return height;                    
+    }
+    public int[] treeQueries(TreeNode root, int[] queries) {
+          int n = 100001;
+        int[] node_level = new int[n];
+        int[] node_height = new int[n];
+         Arrays.fill(node_level, -1);
+           Pair[] top2_height = new Pair[n];
+           for (int i = 0; i < n; i++) top2_height[i] = new Pair(0, 0);
+            findHeight(root, 0, node_level, node_height, top2_height);
+
+             List<Integer> res = new ArrayList<>();
+              for (int query_node : queries) {
+            int level = node_level[query_node];
+            int height = node_height[query_node];
+            int max_height = (top2_height[level].first == height) ? top2_height[level].second : top2_height[level].first;
+            res.add(max_height + level - 1);
+        }
+        int[] array = new int[res.size()];
+        for(int i=0;i<res.size();i++){
+            array[i]=res.get(i);
+        }
+        return array;
+        
+    }
+}
