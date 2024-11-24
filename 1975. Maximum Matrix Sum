@@ -1,0 +1,23 @@
+class Solution {
+    public long maxMatrixSum(int[][] mat) {
+        int n=mat.length;
+        int m= mat[0].length;
+        int minval=Integer.MAX_VALUE,nc=0;
+        long sum=0;
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                    sum+=Math.abs(mat[i][j]);
+                    minval=Math.min(minval,Math.abs(mat[i][j]));
+                    if(mat[i][j] < 0){
+                        nc++;
+                    }
+            }
+        }
+
+        if(nc%2==0){
+            return sum;
+        }
+        return Long.valueOf(sum - 2 * minval);
+    }
+}
