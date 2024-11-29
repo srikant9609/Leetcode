@@ -1,0 +1,47 @@
+class Solution {
+    public int minimumTime(int[][] grid) {
+         int m=grid.length;
+        int n=grid[0].length;
+          if (grid[0][1] > 1 && grid[1][0] > 1){           
+            return -1;
+        }
+
+          int dx[]={-1,0,1,0};
+          int dy[]={0,1,0,-1};
+
+
+
+         PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->a[2]-b[2]);
+           boolean[][] visited=new boolean[m][n];
+            pq.add(new int[]{0,0,0});
+
+           while(!pq.isEmpty()){
+              int[] arr=pq.poll();
+              int row=arr[0];
+              int col=arr[1];
+              int time=arr[2];
+              if(row==m-1 && col==n-1){
+                return time;
+            } 
+
+            if(visited[row][col]) continue;
+            visited[row][col]=true;
+
+            for(int i=0;i<4;i++){
+                int nr=row+dx[i];
+                int nc=col+dy[i];
+
+                if(nr <0 || nr>=m || nc <0 || nc>=n || visited[nr][nc]){
+                    continue;
+                }
+
+                int et=((grid[nr][nc]-time)%2==0) ? 1 : 0;
+
+                pq.add(new int[]{nr,nc,Math.max(grid[nr][nc]+et ,time +1)});
+            }
+           }
+
+     return -1;
+     
+    }
+}
