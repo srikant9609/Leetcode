@@ -1,0 +1,18 @@
+//problem link -https://leetcode.com/problems/separate-black-and-white-balls/?envType=daily-question&envId=2024-10-15
+class Solution {
+    public long minimumSteps(String s) {
+        int n=s.length();
+
+        long swap=0;
+        int bl=0;
+
+        for(int i=0;i<n;i++){
+            if(s.charAt(i)=='0'){
+                swap+=bl;
+            }else{
+                bl++;
+            }
+        }
+        return swap;
+    }
+}
