@@ -1,0 +1,46 @@
+class Solution {
+    private static final int MOD = 1000000007;
+    private int[][] mem;
+    private int targetSize, wordSize, n;
+    private int[][] charFreq;
+    public int numWays(String[] words, String target) {
+
+          targetSize = target.length();
+        wordSize = words[0].length();
+        n = words.length;
+        charFreq = new int[wordSize][26];
+
+        for(String word : words){
+            for(int i=0;i<wordSize;i++){
+                char c=word.charAt(i);
+                charFreq[i][c-'a']++;
+            }
+        }
+
+         mem = new int[wordSize][targetSize];
+        for (int[] row : mem) Arrays.fill(row, -1);
+
+        return countWays(words, 0, target, 0);
+        
+    }
+    private  int countWays(String[] words,int idx,String target,int tidx){
+         if (tidx == targetSize) // Match
+            return idx <= wordSize ? 1 : 0;
+
+            if(idx >= wordSize ||  (wordSize - idx < targetSize - tidx)){
+                return 0;
+            }
+             if (mem[idx][tidx] != -1) // Repeating sub-problem
+            return mem[idx][tidx];
+
+             char curr = target.charAt(tidx);
+             long waySkipCurrCharacter=countWays(words,idx+1,target,tidx) % MOD;
+             long wayAddCurrCharacter=countWays(words,idx+1,target,tidx+1) % MOD;
+             long totalCount=(waySkipCurrCharacter + charFreq[idx][curr-'a'] * wayAddCurrCharacter) % MOD;
+             
+             mem[idx][tidx]=(int)totalCount;
+
+             return mem[idx][tidx];
+
+    }
+}
