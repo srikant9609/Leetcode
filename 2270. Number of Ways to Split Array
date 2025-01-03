@@ -1,0 +1,19 @@
+class Solution {
+    public int waysToSplitArray(int[] nums) {
+        long prefixSum=0;
+        long totSum=0;
+        for(int num: nums){
+            totSum+=num;
+        }
+        int c=0;
+        for(int i=0;i<nums.length-1;i++){
+            prefixSum+=nums[i];
+            if(prefixSum >= (totSum-prefixSum)){
+                c++;
+            }
+        }
+
+        return c;
+        
+    }
+}
