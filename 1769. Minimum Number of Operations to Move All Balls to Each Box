@@ -1,0 +1,31 @@
+class Solution {
+    public int[] minOperations(String boxes) {
+        int n = boxes.length();
+        int noofones=0;
+        int sum=0;
+
+        for(int i=0;i<n;i++){
+            if(boxes.charAt(i)== '1'){
+                noofones++;
+                sum+=i;
+            }
+        }
+        
+        int[] res = new int[n];
+        int numofoneleft=0;
+        int presum=0;
+        for(int i=0;i<n;i++){
+             int moves = sum + presum;
+            res[i] = moves;
+            
+            if(boxes.charAt(i)== '1'){
+                numofoneleft++;
+                noofones--;
+            }
+              presum += numofoneleft;
+            sum -= noofones;
+        }
+
+        return res;
+    }
+}
