@@ -1,0 +1,19 @@
+Problem link - https://leetcode.com/problems/count-the-hidden-sequences/description/?envType=daily-question&envId=2025-04-21
+
+JAVA
+-------------------------------------------------------
+class Solution {
+    public int numberOfArrays(int[] differences, int lower, int upper) {
+        long maxval=0;
+        long minval=0;
+        long curr=0;
+        for(int d : differences){
+            curr +=d;
+            minval=Math.min(minval,curr);
+            maxval=Math.max(maxval,curr);
+        }
+        long ans=(upper-lower) - (maxval-minval) +1;
+
+        return ans > 0 ? (int)ans : 0;
+    }
+}
